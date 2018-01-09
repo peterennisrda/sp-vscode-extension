@@ -1,0 +1,173 @@
+{
+    "name": "sheerpower",
+    "displayName": "Sheerpower",
+    "description": "sheerpower extension",
+    "version": "0.0.5",
+    "publisher": "imarc-inc",
+    "engines": {
+        "vscode": "^1.19.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "keywords": [
+        "Sheerpower",
+        "BASIC"
+    ],
+    "activationEvents": [
+        "onCommand:sheerpower.validateSheerpower",
+        "onCommand:sheerpower.buildSheerpower",
+        "onCommand:sheerpower.runSheerpower",
+        "onCommand:sheerpower.sheerpowerFindFunctionLine",
+        "oncommand:sheerpower.sheerpowerFindLineInFunction",
+        "onLanguage:sheerpower",
+        "onView:includes",
+        "onView:routines"
+    ],
+    "main": "./source/sheerpower",
+    "contributes": {
+        "commands": [
+            {
+                "command": "sheerpower.validateSheerpower",
+                "title": "Validate Sheerpower"
+            },
+            {
+                "command": "sheerpower.buildSheerpower",
+                "title": "Build Sheerpower"
+            },
+            {
+                "command": "sheerpower.runSheerpower",
+                "title": "Run Sheerpower"
+            },
+            {
+                "command": "sheerpower.sheerpowerFindFunctionLine",
+                "title": "Find Function and Line (Sheerpower)"
+            },
+            {
+                "command": "sheerpower.sheerpowerFindLineInFunction",
+                "title": "Find Line in Current Function (Sheerpower)"
+            },
+            {
+                "command": "includes.refresh",
+                "title": "Refresh",
+                "icon": {
+					"light": "resources/refresh_light.svg",
+					"dark": "resources/refresh_dark.svg"
+				}
+            },
+            {
+                "command": "routines.refresh",
+                "title": "Refresh",
+                "icon": {
+					"light": "resources/refresh_light.svg",
+					"dark": "resources/refresh_dark.svg"
+				}
+            }
+
+        ],
+        "snippets": [
+            {
+                "language": "sheerpower-basic",
+                "path": "./snippets/blank_file.json"
+            },
+            {
+                "language": "sheerpower-basic",
+                "path": "./snippets/blank_routine.json"
+            },
+            {
+                "language": "sheerpower-basic",
+                "path": "./snippets/blank_control.json"
+            }
+        ],
+        "languages": [
+            {
+                "id": "sheerpower-basic",
+                "extensions": [
+                    ".spsrc",
+                    ".spinc",
+                    ".form",
+                    ".forminc"
+                ],
+                "aliases": [
+                    "Sheerpower Basic",
+                    "spsrc",
+                    "Sheerpower"
+                ],
+                "configuration": "./language-configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "sheerpower-basic",
+                "scopeName": "source.sheerpower-basic",
+                "path": "sheerpower.tmLanguage"
+            }
+        ],
+        "problemMatchers": [
+            {
+                "name": "sp-errors",
+                "owner": "sheerpower-basic",
+                "fileLocation": [
+                    "absolute"
+                ],
+                "severity": "error",
+                "pattern": "$sp-error"
+            }
+        ],
+        "problemPatterns": [
+            {
+                "name": "sp-error",
+                "regexp": "^(\\$error)\\s+\\|([^\\s]+)\\s+\\|\\s*(\\d+)\\s*\\|\\s*(\\d+)\\s*\\|\\s*(.*)$",
+                "file": 2,
+                "line": 3,
+                "column": 4,
+                "message": 5
+            }
+        ],
+        "views": {
+            "explorer": [
+                {
+                    "id": "includes",
+                    "name": "Included Files",
+                    "when": "resourceLangId == 'sheerpower-basic'"
+                },
+                {
+                    "id": "routines",
+                    "name": "Routines",
+                    "when": "resourceLangId == 'sheerpower-basic'"
+                }
+
+            ]
+        },
+        "menus": {
+			"view/title": [
+				{
+					"command": "includes.refresh",
+					"when": "view == includes",
+					"group": "navigation"
+				},
+				{
+					"command": "routines.refresh",
+					"when": "view == routines",
+					"group": "navigation"
+				}
+            ]
+        }
+    },
+    "scripts": {
+        "postinstall": "node ./node_modules/vscode/bin/install",
+        "test": "node ./node_modules/vscode/bin/test"
+    },
+    "devDependencies": {
+        "@types/mocha": "^2.2.42",
+        "@types/node": "^7.0.43",
+        "eslint": "^4.6.1",
+        "eslint-config-standard": "^11.0.0-beta.0",
+        "eslint-plugin-import": "^2.8.0",
+        "eslint-plugin-node": "^5.2.1",
+        "eslint-plugin-promise": "^3.6.0",
+        "eslint-plugin-standard": "^3.0.1",
+        "typescript": "^2.6.1",
+        "vscode": "^1.1.6"
+    }
+}

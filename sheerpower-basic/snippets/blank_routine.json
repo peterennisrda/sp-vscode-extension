@@ -1,0 +1,56 @@
+{
+    "blank routine": {
+       "prefix": "routine",
+       "body": [
+        "!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
+        "! ${1:routinename} ",
+        "!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
+        "!",
+        "! Brief description:",
+        "!    ${2:description}",
+        "!",
+        "! Expected on entry:",
+        "!    ",
+        "!",
+        "! Locals used:",
+        "!    ",
+        "!",
+        "! Results on exit:",
+        "!    ",
+        "!",
+        "!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
+        "routine ${1:routinename}",
+        "  $0",
+        "end routine",
+        ""
+       ],
+       "description": "blank routine template"
+   },
+   "blank private routine": {
+       "prefix": "private routine",
+       "body": [
+        "!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
+        "! ${1:routinename} ",
+        "!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
+        "!",
+        "! Brief description:",
+        "!    ${2:description}",
+        "!",
+        "! Expected on entry:",
+        "!    ",
+        "!",
+        "! Locals used:",
+        "!    ",
+        "!",
+        "! Results on exit:",
+        "!    ",
+        "!",
+        "!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
+        "private routine ${1:routinename}",
+        "  $0",
+        "end routine",
+        ""
+       ],
+       "description": "blank private routine template"
+   }
+}
