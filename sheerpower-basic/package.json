@@ -1,14 +1,15 @@
 {
     "name": "sheerpower",
     "displayName": "Sheerpower",
-    "description": "sheerpower extension",
-    "version": "0.0.5",
+    "description": "sheerpower language extension",
+    "version": "0.0.15",
     "publisher": "imarc-inc",
     "engines": {
         "vscode": "^1.19.0"
     },
     "categories": [
-        "Other"
+        "Languages",
+        "Themes"
     ],
     "keywords": [
         "Sheerpower",
@@ -63,7 +64,39 @@
 					"dark": "resources/refresh_dark.svg"
 				}
             }
-
+        ],
+        "keybindings": 
+        [
+           {
+                "command": "sheerpower.validateSheerpower",
+                "key": "shift+f6",
+                "mac": "cmd+shift+f6",
+                "when": "editorTextFocus && resourceLangId == 'sheerpower-basic'"
+            },
+            {
+                "command": "sheerpower.buildSheerpower",
+                "key": "f6",
+                "mac": "cmd+f6",
+                "when": "editorTextFocus && resourceLangId == 'sheerpower-basic'"
+            },
+            {
+                "command": "sheerpower.runSheerpower",
+                "key": "f5",
+                "mac": "cmd+f5",
+                "when": "editorTextFocus && resourceLangId == 'sheerpower-basic'"
+            },
+            {
+                "command": "sheerpower.sheerpowerFindFunctionLine",
+                "key": "ctrl+K F",
+                "mac": "cmd+K F",
+                "when": "editorTextFocus && resourceLangId == 'sheerpower-basic'"
+            },
+            {
+                "command": "sheerpower.sheerpowerFindLineInFunction",
+                "key": "ctrl+K L",
+                "mac": "cmd+K L",
+                "when": "editorTextFocus && resourceLangId == 'sheerpower-basic'"
+            }
         ],
         "snippets": [
             {
@@ -84,9 +117,7 @@
                 "id": "sheerpower-basic",
                 "extensions": [
                     ".spsrc",
-                    ".spinc",
-                    ".form",
-                    ".forminc"
+                    ".spinc"
                 ],
                 "aliases": [
                     "Sheerpower Basic",
@@ -94,13 +125,31 @@
                     "Sheerpower"
                 ],
                 "configuration": "./language-configuration.json"
+            },
+            {
+                "id": "html",
+                "extensions": [
+                    ".form",
+                    ".forminc"
+                ],
+                "aliases": [
+                    "Sheerpower Form/HTML File"
+                ]
+            }
+
+        ],
+        "themes": [
+            {
+                "label": "Sheerpower Default",
+                "uiTheme": "vs-dark",
+                "path": "./themes/Sheerpower-dark.tmTheme.json"
             }
         ],
         "grammars": [
             {
                 "language": "sheerpower-basic",
                 "scopeName": "source.sheerpower-basic",
-                "path": "sheerpower.tmLanguage"
+                "path": "./syntaxes/sheerpower.tmLanguage"
             }
         ],
         "problemMatchers": [
@@ -128,13 +177,11 @@
             "explorer": [
                 {
                     "id": "includes",
-                    "name": "Included Files",
-                    "when": "resourceLangId == 'sheerpower-basic'"
+                    "name": "Included Files"
                 },
                 {
                     "id": "routines",
-                    "name": "Routines",
-                    "when": "resourceLangId == 'sheerpower-basic'"
+                    "name": "Routines"
                 }
 
             ]

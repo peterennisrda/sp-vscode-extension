@@ -3,7 +3,9 @@
 const vscode = require('vscode');
 const build = require('./build');
 const includes = require('./includes');
-const routines = require('./routines.js');
+const routines = require('./routines');
+const signature = require('./signature');
+const definitions = require('./definitions');
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -15,6 +17,8 @@ function activate(context) {
     // build functions
     build.buildInitialize(context);
     build.tasksInitialize(context);
+    signature.signatureActivate(context);
+    definitions.definitionsActivate(context);
 
     // includes view
     includes.includesInitialize(context);   
@@ -43,7 +47,70 @@ exports.deactivate = deactivate;
 // find a routine and line number common in error report files
 function sheerpowerFindFunctionLine() {
     vscode.window.showInputBox({prompt: 'Locate Function:line number ?'})
-    .then(val => MoveCursorToFunctionLine(val));
+    .then(val => MoveCursorToSymbolLine(val));
+}
+
+function MoveCursorToSymbolLine( value ) {
+    if ( !vscode.window.activeTextEditor || !vscode.window.activeTextEditor.document) {
+        vscode.window.showErrorMessage("you are not currently in an active editor window");
+        return;
+    }
+
+    var routine = value.split('.');
+    var lineOffset = -1;
+    if ( routine.length > 1) {
+        try
+        {
+            lineOffset = parseInt( routine[1] );
+        }
+        catch(err)
+        {
+            vscode.window.showErrorMessage("line offset not a valid number: " + routine[1]);
+        }
+    }
+
+    var routineData = signature.findRoutine( vscode.window.activeTextEditor.document.fileName, routine[0] );
+    if ( !routineData ) {
+        vscode.window.showInformationMessage("routine " + routine[0] + " was not found");
+        return;
+    }
+
+    var fileUri = vscode.Uri.file(routineData.sourceFilename);
+    var options = { preserveFocus: false, preview: true };
+
+    vscode.window.showTextDocument( fileUri, options )
+    .then( editor => {
+        var startPos = null;
+        var endPos = null;
+
+        if ( lineOffset < 0 ) {
+            // move the selection to the right place
+            startPos = editor.document.positionAt( routineData.charOffset );
+            endPos = startPos.translate( 0, routineData.symbolName.length );
+            if ( routineData.length > 1 ) {
+                startPos = startPos.translate( 0, - startPos.character );
+                endPos = startPos;
+            }
+        } else {
+            // move forward a number of lines and select the entire line...
+            startPos = editor.document.positionAt( routineData.charOffset );
+            startPos = startPos.translate( lineOffset, -1 * startPos.character );
+
+            var lineText = editor.document.lineAt( startPos.line );
+            endPos = startPos.translate( 0, lineText.text.length );
+        }
+
+        var newSelection = new vscode.Selection(startPos, endPos);
+        editor.selection = newSelection;
+
+        editor.revealRange( new vscode.Range(
+            Math.max(newSelection.active.line - 10, 0),
+            newSelection.active.character,
+            newSelection.active.line + 10,
+            newSelection.active.character),
+            vscode.TextEditorRevealType.InCenterIfOutsideViewport
+        );
+    });
 }
 
 // pattern for finding where routines are in the source file. not perfect but will do
@@ -55,7 +122,7 @@ function MoveCursorToFunctionLine( value ) {
     var doc = editor.document;
     var textBuffer = doc.getText();
 
-    var routine = value.split(':');
+    var routine = value.split('.');
 
     var results = null;
 
@@ -133,7 +200,7 @@ function sheerpowerFindLineInFunction() {
 
     // use the routine above to do the work...
     vscode.window.showInputBox({prompt: 'Routine: ' + routineName + ' Locate line number ?'})
-    .then(val => MoveCursorToFunctionLine(routineName + ':' + val));
+    .then(val => MoveCursorToFunctionLine(routineName + '.' + val));
 }
 
 

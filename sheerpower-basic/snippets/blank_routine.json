@@ -52,5 +52,41 @@
         ""
        ],
        "description": "blank private routine template"
-   }
+   },
+   "routine header comment": {
+        "prefix": "header",
+        "body": [
+            "!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
+            "! ${1:routinename} ",
+            "!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
+            "!",
+            "! Brief description:",
+            "!    ${2:description}",
+            "!",
+            "! Expected on entry:",
+            "!    ",
+            "!",
+            "! Locals used:",
+            "!    ",
+            "!",
+            "! Results on exit:",
+            "!    ",
+            "!",
+            "!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
+            ""
+        ],
+        "description": "routine header comment block template"
+    },
+    "docstyle routine": {
+        "prefix": "summary",
+        "body": [
+         "/// <Summary>",
+         "/// ${1:description}",
+         "/// </Summary>",
+         "/// <param name=\"${2:param}\"></param>",
+         "/// <returns></returns>",
+         ""
+        ],
+        "description": "docstyle header template"
+    } 
 }

@@ -1,5 +1,7 @@
 const vscode = require('vscode');
 const path = require('path');
+const utilities = require('./utilities');
+const signature = require('./signature');
 
 module.exports.includesInitialize = includesInitialize;
 
@@ -36,14 +38,16 @@ class includesTreeData {
     constructor() {
         this._onDidChangeTreeData = new vscode.EventEmitter();
         this.onDidChangeTreeData = this._onDidChangeTreeData.event;
+        this.nextFetchIsARefresh = false;
 
-        // change of editor means re parse...
+        // change of editor means refresh...
         vscode.window.onDidChangeActiveTextEditor(editor => {
-			this.refresh();
+            this._onDidChangeTreeData.fire();
 		});
     }
     
     refresh( ) {
+        this.nextFetchIsARefresh = true;
         this._onDidChangeTreeData.fire();
     }
     
@@ -52,82 +56,48 @@ class includesTreeData {
     }
     
     getChildren(element) {
-        console.log("getchidlren: " + element );
+        console.log("getchildren: " + element );
         
         if ( element ) {
             return Promise.resolve( [] );
         }
         else{
-            return Promise.resolve( this.getDependenciesForFiles());
+            var flag = this.nextFetchIsARefresh;
+            this.nextFetchIsARefresh = false;
+
+            return Promise.resolve( this.getDependenciesForFiles( flag ));
         }
 	}
 
-    getDependenciesForFiles() {
+    getDependenciesForFiles( forceIt ) {
         if ( !vscode.window.activeTextEditor || 
             !vscode.window.activeTextEditor.document ||
             vscode.window.activeTextEditor.document.languageId != 'sheerpower-basic') {
             return [];
         }
         
-        var files = this.searchFileForIncludes();
-
-        console.log('includes: ' + files.length );
+        // scan if the file not in the cache...
+        signature.scanSourceFile( vscode.window.activeTextEditor.document.fileName, forceIt );
+        var includes = signature.getSourceFileIncludes(vscode.window.activeTextEditor.document.fileName );
+        
+        console.log('includes: ' + includes.length );
         
         var results = [];
-        for ( var index = 0; index < files.length; index ++) {
-            var node = new Dependency( files[index], vscode.TreeItemCollapsibleState.None );
+        for ( var index = 0; index < includes.length; index ++) {
+            var node = new Dependency( includes[index], vscode.TreeItemCollapsibleState.None );
             results.push( node );
         }
         return results;
     }
-
-    searchFileForIncludes() {
-        var editor = vscode.window.activeTextEditor;
-        var doc = editor.document;
-        var textBuffer = doc.getText();
-
-        includesPattern.lastIndex = 0;
-        var results = null;
-
-        var files = [];
-
-        do
-        {
-            results = includesPattern.exec(textBuffer);
-            if ( results && results.length > 1 ) {
-                var filename = unquote(results[1]);
-
-                // now resolve the sheeerpower path characters...
-                filename = SubstSheerpowerPathMarker(filename);
-
-                // add to list..
-                files.push( filename.toLowerCase() );
-            }
-        }
-        while ( results );
-
-        // now populate the tree with data...
-        files.sort(compareIncludes);
-        return files;
-    }
 }
 
-function compareIncludes(a,b) {
-    var aname = path.basename(a);
-    var bname = path.basename(b);
-
-    if (aname < bname)
-      return -1;
-    if (aname > bname)
-      return 1;
-    return 0;
-  }
-
 class Dependency extends vscode.TreeItem {
-	constructor( label, collapsibleState ) {
-		super(label, collapsibleState);
+	constructor( include, collapsibleState ) {
+		super(include.filename, collapsibleState);
 
-        this.label = path.basename(label);
+        this.dataNode = include;
+
+        this.label = path.basename(include.filename);
 
         this.iconPath = {
             light: path.join(__filename, '..', '..', 'resources', 'include_light.svg'),
@@ -136,45 +106,11 @@ class Dependency extends vscode.TreeItem {
 
         this.contextValue = 'include';
 
-        this.filePath = label;
-
         this.command = {
             command: "includes.openFile",
             title: "Open file",
-            arguments: [ label ]
+            arguments: [ include.filename ]
         };
     }
-}
-
-
-// substitute the @ sign for the base folder of the spsrc...
-function SubstSheerpowerPathMarker( filename ) {
-    if ( filename[0] != '@' ) {
-        return filename;
-    }
-
-    var rootFolder = path.dirname( vscode.window.activeTextEditor.document.fileName );
-    var newPath = path.join( rootFolder, filename.substring( 1, filename.length ) );
-    return newPath;
-}
-
-// remove quite symbols from start and end of string.
-function unquote( text ) {
-    if ( text.length == 0 ) {
-        return text;
-    }
-
-    var start = 0;
-    var end = text.length;
-
-    if ( text[0] == '"' || text[0] == "'") {
-        start ++;
-    }
-
-    if ( end > start && text[end-1] == '"' || text[end-1] == "'") {
-        end --;
-    }
-
-    return text.substring( start, end);
 }
 

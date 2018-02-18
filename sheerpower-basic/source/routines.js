@@ -1,5 +1,6 @@
 const vscode = require('vscode');
 const path = require('path');
+const signature = require('./signature');
 
 module.exports.routinesInitialize = routinesInitialize;
 
@@ -52,6 +53,7 @@ class routinesTreeData {
     constructor() {
         this._onDidChangeTreeData = new vscode.EventEmitter();
         this.onDidChangeTreeData = this._onDidChangeTreeData.event;
+        this.nextFetchIsARefresh = false;
 
         // change of editor means re parse...
         vscode.window.onDidChangeActiveTextEditor(editor => {
@@ -60,6 +62,7 @@ class routinesTreeData {
     }
     
     refresh( ) {
+        this.nextFetchIsARefresh = true;
         this._onDidChangeTreeData.fire();
     }
     
@@ -72,85 +75,41 @@ class routinesTreeData {
             return Promise.resolve( [] );
         }
         else{
-            return Promise.resolve( this.getDependenciesForRoutines());
+            var flag = this.nextFetchIsARefresh;
+            this.nextFetchIsARefresh = false;
+
+            return Promise.resolve( this.getDependenciesForRoutines( flag ));
         }
 	}
 
-    getDependenciesForRoutines() {
+    getDependenciesForRoutines( forceIt ) {
         if ( !vscode.window.activeTextEditor || 
             !vscode.window.activeTextEditor.document ||
             vscode.window.activeTextEditor.document.languageId != 'sheerpower-basic') {
             return [];
         }
 
-        var routines = this.searchFileForRoutines();
+        // scan if the file not in the cache...
+        signature.scanSourceFile( vscode.window.activeTextEditor.document.fileName, forceIt );
+        var routines = signature.getSourceFileRoutines(vscode.window.activeTextEditor.document.fileName );
+
+        console.log( "routines: " + routines.size );
 
         var results = [];
-        for ( var index = 0; index < routines.length; index ++) {
-            var node = new Routine( routines[index].routine,
-                routines[index].line, 
-                routines[index].start,
-                routines[index].length,
+        var doc = vscode.window.activeTextEditor.document;
+
+        routines.forEach( value => {
+            var pos = doc.positionAt( value.charOffset );
+
+            var node = new Routine( value,
+                pos.line, 
+                pos.character,
+                value.symbolName.length,
                 vscode.TreeItemCollapsibleState.None, "" );
             results.push( node );
-        }
+        });
+
         return results;
-    }
-
-    searchFileForRoutines() {
-        var editor = vscode.window.activeTextEditor;
-        var doc = editor.document;
-        var textBuffer = doc.getText();
-
-        routinesPattern.lastIndex = 0;
-        var results = null;
-
-        var routines = [];
-
-        do
-        {
-            results = routinesPattern.exec(textBuffer);
-            if ( results && results.length > 1 && results[1] ) {
-                var bits = results[2].trim().split(' ');
-                if ( bits && bits.length > 0 && bits[0].length > 0 ) {
-                    var routinename = bits[0];
-
-                    var location = results.index;
-                    location = textBuffer.indexOf( bits[0], location );
-    
-                    // then move the cursor to results.index and count lines...
-                    var newStartPosition = doc.positionAt( location );
-
-                    var lineText = doc.lineAt( newStartPosition.line );
-
-                    // make sure there is no comment marker to the left of us...
-                    var comment = lineText.text.indexOf( '!' );
-                    if ( comment >= 0 && comment < results.index ) {
-                        continue;
-                    }
-
-                    comment = lineText.text.indexOf( '\\\\' );
-                    if ( comment >= 0 && comment < results.index ) {
-                        continue;
-                    }
-
-                    var newEndPosition = newStartPosition.translate( 0, bits[0].length );
-    
-                    // add to list..
-                    routines.push( { 
-                        routine: routinename, 
-                        line: newStartPosition.line,
-                        start: newStartPosition.character,
-                        length: newEndPosition.character - newStartPosition.character 
-                    });
-                }
-            }
-        }
-        while ( results );
-
-        // now populate the tree with data...
-        routines.sort(compareRoutines);
-        return routines;
     }
 }
 
@@ -163,10 +122,11 @@ function compareRoutines(a,b) {
   }
   
 class Routine extends vscode.TreeItem {
-	constructor( label, line, start, length, collapsibleState, command ) {
-		super(label, collapsibleState);
+	constructor( routine, line, start, length, collapsibleState, command ) {
+		super(routine.symbolName, collapsibleState);
 
-        this.label = label;
+        this.label = routine.symbolName;
+        this.routine = routine;
 
         this.iconPath = {
             light: path.join(__filename, '..', '..', 'resources', 'include_light.svg'),
@@ -178,7 +138,7 @@ class Routine extends vscode.TreeItem {
         this.command = {
             command: "routines.goto",
             title: "",
-            arguments: [ label, line, start, length ]
+            arguments: [ this.label, line, start, length ]
         };
     }
 }

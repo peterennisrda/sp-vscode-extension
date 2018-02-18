@@ -23,15 +23,9 @@
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>\\\\.*$</string>
+			<string>//.*$</string>
 			<key>name</key>
-			<string>comment.line</string>
-		</dict>
-		<dict>
-			<key>match</key>
-			<string>%debug.*$</string>
-			<key>name</key>
-			<string>debug.line</string>
+			<string>comment.line.cstyle</string>
 		</dict>
 		<dict>
 			<key>begin</key>
@@ -57,7 +51,7 @@
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>\b(?i:routine|private|goto|if|then|for|repeat|iterate|do|while|to|step|next|gosub|call|return|stop|halt|end|with|returning)(?![$])\b</string>
+			<string>\b(?i:routine|private|goto|if|then|else|elseif|for|each|repeat|iterate|do|loop|while|to|step|next|gosub|call|return|stop|halt|end|with|returning)(?![$])\b</string>
 			<key>name</key>
 			<string>keyword.control</string>
 		</dict>
@@ -75,37 +69,13 @@
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>\b(?i:list)(?![$])\b</string>
+			<string>\b(?i:\%debug)(?![$])\b</string>
 			<key>name</key>
-			<string>keyword.control.immediate</string>
+			<string>keyword.debug</string>
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>\b(?i:poke|call|trace|notrace)(?![$])\b</string>
-			<key>name</key>
-			<string>keyword.utility</string>
-		</dict>
-		<dict>
-			<key>match</key>
-			<string>\b(?i:peek)(?=\()</string>
-			<key>name</key>
-			<string>support.function.utility</string>
-		</dict>
-		<dict>
-			<key>match</key>
-			<string>\b(?i:gr|color|plot|hlin|vlin|at)(?![$])\b</string>
-			<key>name</key>
-			<string>keyword.graphics</string>
-		</dict>
-		<dict>
-			<key>match</key>
-			<string>\b(?i:scrn)(?=\()</string>
-			<key>name</key>
-			<string>support.function.graphics</string>
-		</dict>
-		<dict>
-			<key>match</key>
-			<string>\b(?i:tab|text|vtab|print|input|open|close|structure)(?![$])\b</string>
+			<string>\b(?i:tab|text|print|input|line|open|close|structure)(?![$])\b</string>
 			<key>name</key>
 			<string>keyword.io</string>
 		</dict>
@@ -121,24 +91,11 @@
 			<key>name</key>
 			<string>keyword.special</string>
 		</dict>
-
-		<dict>
-			<key>match</key>
-			<string>\b(?i:in|pr)#</string>
-			<key>name</key>
-			<string>keyword.io.hash</string>
-		</dict>
 		<dict>
 			<key>match</key>
 			<string>\b(?i:and|or|not)(?![$])\b</string>
 			<key>name</key>
 			<string>keyword.operator.logical</string>
-		</dict>
-		<dict>
-			<key>match</key>
-			<string>\b(?i:mod)(?![$])\b</string>
-			<key>name</key>
-			<string>keyword.operator.arithmetic</string>
 		</dict>
 		<dict>
 			<key>match</key>
@@ -150,7 +107,7 @@
 			<key>match</key>
 			<string>\b(?i:abs|sgn|rnd|div0|div|mod)(?=\()</string>
 			<key>name</key>
-			<string>support.function.arithmetic</string>
+			<string>keyword.operator.arithmetic</string>
 		</dict>
 		<dict>
 			<key>match</key>
@@ -162,7 +119,7 @@
 			<key>comment</key>
 			<string>uses non-greedy *? so keywords get a first shot</string>
 			<key>match</key>
-			<string>\b[A-Za-z][A-Za-z0-9]*[$]?</string>
+			<string>\b[A-Za-z_][A-Za-z0-9_]*[\$\?\%]?</string>
 			<key>name</key>
 			<string>variable</string>
 		</dict>
