@@ -1,0 +1,253 @@
+{
+	"name": "sheerpower-lsp",
+	"displayName": "Sheerpower Scripting",
+	"description": "Sheerpower Scripting language server",
+	"author": "Touch Technologies and E-Closing.com (cdturner)",
+	"license": "MIT",
+	"version": "1.0.8",
+	"publisher": "Maerekai",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/imgh1010/vscode-extensions"
+	},
+	"categories": [
+		"Programming Languages",
+		"Themes"
+	],
+	"keywords": [
+		"Sheerpower",
+		"Sheerpower Script",
+		"BASIC",
+		"multi-root ready"
+	],
+	"engines": {
+		"vscode": "^1.23.0"
+	},
+	"activationEvents": [
+		"onLanguage:sheerpower-basic",
+		"onCommand:sheerpowerBasic.validateSheerpower",
+		"onCommand:sheerpowerBasic.buildSheerpower",
+		"onCommand:sheerpowerBasic.runSheerpower",
+		"onCommand:sheerpowerBasic.FindLineInFunction",
+		"onCommand:sheerpowerBasic.FindLineInFunction",
+		"onCommand:sheerpowerBasic.resetCache"
+	],
+	"main": "./client/out/extension",
+	"contributes": {
+		"configuration": {
+			"type": "object",
+			"title": "Example configuration",
+			"properties": {
+				"sheerpowerBasic.maxNumberOfProblems": {
+					"scope": "resource",
+					"type": "number",
+					"default": 100,
+					"description": "Controls the maximum number of problems produced by the server."
+				},
+				"sheerpowerBasic.maxCodeCompletionItems": {
+					"scope": "resource",
+					"type": "number",
+					"default": 50,
+					"description": "Controls the maximum number of code completion items to return."
+				},
+				"sheerpowerBasic.recursiveSearchForRoutinesByRootSpsrc": {
+					"scope": "resource",
+					"type": "boolean",
+					"default": true,
+					"description": "When searching for hover or code completion routines, search all related include files starting from the root spsrc that included us."
+				},
+				"sheerpowerBasic.recursiveSearchForRoutines": {
+					"scope": "resource",
+					"type": "boolean",
+					"default": true,
+					"description": "When searching for hover or code completion routines, search all related include files."
+				},
+				"sheerpowerBasic.recursiveParseFiles": {
+					"scope": "resource",
+					"type": "number",
+					"default": true,
+					"description": "When parsing a file, recursively parse any included files also."
+				},
+				"sheerpowerBasic.defaultIncludesExtensionsAsSpinc": {
+					"scope": "resource",
+					"type": "boolean",
+					"default": true,
+					"description": "when handling included files, if there is no file extension use the default .spinc."
+				},
+				"sheerpowerBasic.skipFirstTwoLinesOfCommentBlock": {
+					"scope": "resource",
+					"type": "boolean",
+					"default": true,
+					"description": "When extracting the comment block for routine documentation skip the first two lines."
+				},
+				"sheerpowerBasic.maxFileSizeToParse": {
+					"scope": "resource",
+					"type": "number",
+					"default": 2000000,
+					"description": "files that are over a certain size will be ignored when parsing for symbols.."
+				},
+				"sheerpowerBasic.trace.server": {
+					"scope": "window",
+					"type": "string",
+					"enum": [
+						"off",
+						"messages",
+						"verbose"
+					],
+					"default": "off",
+					"description": "Traces the communication between VS Code and the language server."
+				}
+			}
+		},
+		"commands": [{
+				"command": "sheerpowerBasic.validateSheerpower",
+				"title": "Validate Sheerpower"
+			},
+			{
+				"command": "sheerpowerBasic.buildSheerpower",
+				"title": "Build Sheerpower"
+			},
+			{
+				"command": "sheerpowerBasic.runSheerpower",
+				"title": "Run Sheerpower"
+			},
+			{
+				"command": "sheerpowerBasic.FindFunctionLine",
+				"title": "Find Function and Line (Sheerpower)"
+			},
+			{
+				"command": "sheerpowerBasic.FindLineInFunction",
+				"title": "Find Line in Current Function (Sheerpower)"
+			},
+			{
+				"command": "sheerpowerBasic.resetCache",
+				"title": "reset the cache of parsed symbols and files (Sheerpower)"
+			},
+			{
+				"command": "sheerpowerBasic.includes.refresh",
+				"title": "Refresh",
+				"icon": {
+					"light": "resources/refresh_light.svg",
+					"dark": "resources/refresh_dark.svg"
+				}
+			},
+			{
+				"command": "sheerpowerBasic.routines.refresh",
+				"title": "Refresh",
+				"icon": {
+					"light": "resources/refresh_light.svg",
+					"dark": "resources/refresh_dark.svg"
+				}
+			}
+		],
+		"keybindings": [{
+				"command": "sheerpowerBasic.validateSheerpower",
+				"key": "shift+f6",
+				"mac": "cmd+shift+f6",
+				"when": "editorTextFocus && resourceLangId == 'sheerpower-basic'"
+			},
+			{
+				"command": "sheerpowerBasic.buildSheerpower",
+				"key": "f6",
+				"mac": "cmd+f6",
+				"when": "editorTextFocus && resourceLangId == 'sheerpower-basic'"
+			},
+			{
+				"command": "sheerpowerBasic.runSheerpower",
+				"key": "ctrl+f5",
+				"mac": "cmd+ctrl+f5",
+				"when": "editorTextFocus && resourceLangId == 'sheerpower-basic'"
+			},
+			{
+				"command": "sheerpowerBasic.FindFunctionLine",
+				"key": "ctrl+K F",
+				"mac": "cmd+K F",
+				"when": "editorTextFocus && resourceLangId == 'sheerpower-basic'"
+			},
+			{
+				"command": "sheerpowerBasic.FindLineInFunction",
+				"key": "ctrl+K L",
+				"mac": "cmd+K L",
+				"when": "editorTextFocus && resourceLangId == 'sheerpower-basic'"
+			}
+		],
+		"languages": [{
+			"id": "sheerpower-basic",
+			"extensions": [
+				".spsrc",
+				".spinc"
+			],
+			"aliases": [
+				"Sheerpower Script",
+				"spsrc",
+				"spinc",
+				"Sheerpower"
+			],
+			"configuration": "./language-configuration.json"
+		}],
+		"snippets": [{
+				"language": "sheerpower-basic",
+				"path": "./snippets/blank_file.json"
+			},
+			{
+				"language": "sheerpower-basic",
+				"path": "./snippets/blank_routine.json"
+			},
+			{
+				"language": "sheerpower-basic",
+				"path": "./snippets/blank_control.json"
+			}
+		],
+		"themes": [{
+			"label": "Sheerpower Default",
+			"uiTheme": "vs-dark",
+			"path": "./themes/Sheerpower-dark.tmTheme.json"
+		}],
+		"grammars": [{
+			"language": "sheerpower-basic",
+			"scopeName": "source.sheerpower-basic",
+			"path": "./syntaxes/sheerpower.tmLanguage"
+		}],
+		"views": {
+			"explorer": [{
+					"id": "sheerpowerBasic.includes",
+					"name": "Included Files",
+					"when": "resourceLangId == 'sheerpower-basic'"
+				},
+				{
+					"id": "sheerpowerBasic.routines",
+					"name": "Routines",
+					"when": "resourceLangId == 'sheerpower-basic'"
+				}
+			]
+		},
+		"menus": {
+			"view/title": [{
+					"command": "sheerpowerBasic.includes.refresh",
+					"when": "view == sheerpowerBasic.includes",
+					"group": "navigation"
+				},
+				{
+					"command": "sheerpowerBasic.routines.refresh",
+					"when": "view == sheerpowerBasic.routines",
+					"group": "navigation"
+				}
+			]
+		}
+	},
+	"scripts": {
+		"vscode:prepublish": "cd client && npm run update-vscode && cd .. && npm run compile",
+		"compile:client": "tsc -p ./client/tsconfig.json",
+		"compile:server": "tsc -p ./server/tsconfig.json",
+		"watch:client": "tsc -w -p ./client/tsconfig.json",
+		"watch:server": "tsc -w -p ./server/tsconfig.json",
+		"compile": "npm run compile:client && npm run compile:server",
+		"postinstall": "cd client && npm install && cd ../server && npm install && cd ..",
+		"test": "sh ./scripts/e2e.sh"
+	},
+	"devDependencies": {
+		"@types/mocha": "^5.2.0",
+		"@types/node": "^8.0.0",
+		"typescript": "2.8.3"
+	}
+}

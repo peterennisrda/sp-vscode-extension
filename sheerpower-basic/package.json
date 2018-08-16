@@ -52,22 +52,21 @@
                 "command": "includes.refresh",
                 "title": "Refresh",
                 "icon": {
-					"light": "resources/refresh_light.svg",
-					"dark": "resources/refresh_dark.svg"
-				}
+                    "light": "resources/refresh_light.svg",
+                    "dark": "resources/refresh_dark.svg"
+                }
             },
             {
                 "command": "routines.refresh",
                 "title": "Refresh",
                 "icon": {
-					"light": "resources/refresh_light.svg",
-					"dark": "resources/refresh_dark.svg"
-				}
+                    "light": "resources/refresh_light.svg",
+                    "dark": "resources/refresh_dark.svg"
+                }
             }
         ],
-        "keybindings": 
-        [
-           {
+        "keybindings": [
+            {
                 "command": "sheerpower.validateSheerpower",
                 "key": "shift+f6",
                 "mac": "cmd+shift+f6",
@@ -136,7 +135,6 @@
                     "Sheerpower Form/HTML File"
                 ]
             }
-
         ],
         "themes": [
             {
@@ -183,21 +181,20 @@
                     "id": "routines",
                     "name": "Routines"
                 }
-
             ]
         },
         "menus": {
-			"view/title": [
-				{
-					"command": "includes.refresh",
-					"when": "view == includes",
-					"group": "navigation"
-				},
-				{
-					"command": "routines.refresh",
-					"when": "view == routines",
-					"group": "navigation"
-				}
+            "view/title": [
+                {
+                    "command": "includes.refresh",
+                    "when": "view == includes",
+                    "group": "navigation"
+                },
+                {
+                    "command": "routines.refresh",
+                    "when": "view == routines",
+                    "group": "navigation"
+                }
             ]
         }
     },

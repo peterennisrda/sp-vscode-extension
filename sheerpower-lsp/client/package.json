@@ -1,0 +1,23 @@
+{
+	"name": "sheerpower-lsp-client",
+	"description": "VSCode part of Sheerpower BASIC language server",
+	"author": "Touch Technologies and E-closing.com",
+	"license": "MIT",
+	"version": "0.0.1",
+	"publisher": "vscode",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/imgh1010/vscode-extensions"
+	},
+	"engines": {
+		"vscode": "^1.23.0"
+	},
+	"scripts": {
+		"update-vscode": "node ./node_modules/vscode/bin/install",
+		"postinstall": "node ./node_modules/vscode/bin/install"
+	},
+	"dependencies": {
+		"vscode": "^1.1.18",
+		"vscode-languageclient": "^4.1.4"
+	}
+}

@@ -1,0 +1,64 @@
+{
+    "for loop": {
+       "prefix": "for",
+       "body": [
+        "for ${1:index} = ${2:start} to ${3:end}",
+        "  $0",
+        "next ${1:index}",
+        ""
+       ],
+       "description": "simple for loop template"
+   },
+   "do block": {
+       "prefix": "do",
+       "body": [
+        "do",
+        "  if NOT ${1:clause} then exit do",
+        "  ",
+        "  $0",
+        "end do",
+        ""
+       ],
+       "description": "simple do block template"
+   },
+   "do loop": {
+       "prefix": "do",
+       "body": [
+        "do",
+        "  if ${1:clause} then exit do",
+        "  ",
+        "  $0",
+        "loop",
+        ""
+       ],
+       "description": "simple do loop template"
+   },
+   "extract full": {
+       "prefix": "extract",
+       "body": [
+        "extract structure ${1:table}, field ${2:field} : key ${3:keyvalue}",
+        "  $0",
+        "end extract",
+        ""
+       ],
+       "description": "full extract template"
+   },
+   "extract partial": {
+       "prefix": "extract",
+       "body": [
+        "extract structure ${1:table}, field ${2:field} : partial key ${3:keyvalue}",
+        "  $0",
+        "end extract",
+        ""
+       ],
+       "description": "partial extract template"
+   },
+   "open structure": {
+       "prefix": "open",
+       "body": [
+        "open structure ${1:table} : name ${2:name}, access ${3:accesstype}",
+        "$0"
+       ],
+       "description": "open structure template"
+   }
+}
